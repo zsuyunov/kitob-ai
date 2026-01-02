@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import {
   createStudent,
   deleteStudent,
@@ -25,6 +26,8 @@ export default function AdmStudents() {
   const [showForm, setShowForm] = useState(false);
   const [editTarget, setEditTarget] = useState<Student | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
+  const searchParams = useSearchParams();
+  const shouldOpenForm = searchParams.get("create") === "1";
 
   const loadData = async () => {
     setLoading(true);
@@ -41,6 +44,12 @@ export default function AdmStudents() {
   useEffect(() => {
     loadData();
   }, []);
+
+  useEffect(() => {
+    if (shouldOpenForm) {
+      setShowForm(true);
+    }
+  }, [shouldOpenForm]);
 
   const handleCreate = async (payload: {
     firstName: string;
